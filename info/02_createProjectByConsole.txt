@@ -1,0 +1,14 @@
+1. В папке, где хотим создать проект:
+    gradle init
+
+2. Предлагается выбрать тип проекта к генерации
+    - basic
+    - application
+    - library
+    - Gradle plugin
+
+3. Select build script DSL:
+    - Groovy
+    - Kotlin
+
+4. Project name - жмем enter если устраивает имя
