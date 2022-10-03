@@ -36,7 +36,21 @@
 //}
 
 // type: DefaultTask это мы указали от какого класса мы хотим унаследоваться. Это по-умолчанию, но можно изменить
+// !!! В Таске мы конфигурируем только !!!
 task hello (description: "Hello task", group: "dmdev", type: DefaultTask) {
     println "Configuration task 'hello'"
+
+    doLast {
+        println "execution phase, Action1"
+    }
+
+    doFirst {
+        println "execution phase, Action2"
+    }
+    doLast {
+        println "execution phase, Action3"
+    }
     println "task: $description, group: $group, actions: ${actions.size()}"
+    // где наша таска лежит, в каком проекте
+    println "path task: $path"
 }
