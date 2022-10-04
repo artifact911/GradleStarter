@@ -1,0 +1,46 @@
+Два способа создания плагинов:
+    1. Через скрипт.
+        - Создадим файл *.gradle в корневой директории (создавать можно где угодно) и вынесем туда все из
+        нашего build.gradle.
+        - Теперь в  build.gradle импортируем скрипт:
+            apply from: 'script.gradle'
+            (т.к. build.gradle и script.gradle можно указать так, как указали. В противном случае нужно было бы указать
+            относительный путь)
+        - Теперь мы можем вызывать таски из скрипта
+       Недостатки:
+        - Скрипт разрастается, его нужно дробить на более мелкие и потом трудно поддерживать.
+
+    2. Создание Класса
+
+        class CustomPlugin implements Plugin<Project> {
+            @Override
+            void apply(Project project) {
+                def map = [description: "Hello task", group: "dmdev", type: DefaultTask]
+                project.task(map, "hello") {
+                    println "Configuration task 'hello'"
+                    doLast {
+                        println "execution phase, Action1"
+                    }
+                    doFirst {
+                        println "execution phase, Action2"
+                    }
+                    doLast {
+                        println "execution phase, Action3"
+                    }
+                    println "task: $description, group: $group, actions: ${actions.size()}"
+                    // где наша таска лежит, в каком проекте
+                    println "path task: $path"
+                }
+            }
+        }
+
+        и импортируем:
+            apply plugin: CustomPlugin.class (.class не обязательно)
+
+     Плюсы:
+            - Все возможности ООП
+            - Коль это классы, то можно на них писать тесты
+     Минусы:
+        Это класс, которых находится в скипте и его нужно выносить в отдельную директорию. И для этого есть спецДиректория
+        в Gradle - buildSrc. Когда вынесем, мы можем указать для нашего плагина ID. И тогда при импорте мы можем указывать
+        не полный путь к нашему плагину, а его ID
