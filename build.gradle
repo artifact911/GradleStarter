@@ -1,43 +1,4 @@
-// task = new DefaultTask
-//task("hello")
-
-//tasks.findByName("hello")
-//1
-//hello.description = "Hello task"
-//hello.group = "dmdev"
-
-//2
-//hello.configure Closure
-//hello {
-//    println "Configuration task 'hello'"
-//    description = "Hello task"
-//    group = "dmdev"
-//}
-
-//3
-//task("hello") {
-//    println "Configuration task 'hello'"
-//    description = "Hello task"
-//    group = "dmdev"
-//}
-
-// refactor
-//task hello {
-//    println "Configuration task 'hello'"
-//    description = "Hello task"
-//    group = "dmdev"
-//}
-
-// refactor2
-//def map = [description: "Hello task", group: "dmdev"]
-//task(map, hello) {
-//    println "Configuration task 'hello'"
-//    println "task: $description, group: $group, actions: ${actions.size()}"
-//}
-
-// type: DefaultTask это мы указали от какого класса мы хотим унаследоваться. Это по-умолчанию, но можно изменить
-// !!! В Таске мы конфигурируем только !!!
-task hello (description: "Hello task", group: "dmdev", type: DefaultTask) {
+task hello(description: "Hello task", group: "dmdev", type: DefaultTask) {
     println "Configuration task 'hello'"
 
     doLast {
@@ -53,4 +14,66 @@ task hello (description: "Hello task", group: "dmdev", type: DefaultTask) {
     println "task: $description, group: $group, actions: ${actions.size()}"
     // где наша таска лежит, в каком проекте
     println "path task: $path"
+}
+
+task first {
+    doLast {
+        println "Task 1"
+    }
+}
+task second {
+    doLast {
+        println "Task 2"
+    }
+}
+task third {
+    doLast {
+        println "Task 3"
+    }
+}
+task fourth {
+    doLast {
+        println "Task 4"
+    }
+}
+
+//    // сделаем зависимость таски4 от таски2
+//
+//    //fourth.dependsOn(second)
+//    // вызываем gradle fourth и видим что отработали таска2 и таска4
+//    // читаем так: до того, как выполнится таска4 должна выполниться таска2, а раньше чем 2 таска1
+//fourth.dependsOn second
+//second.dependsOn first
+//
+//    // тут читаем так:
+//    // после таски2 должна выполнится таска3
+//second.finalizedBy third
+//
+//    // Граф строится на остновании таски, которую мы вызвали.
+//    // граф можно посмотреть:
+//    // вызываем gradle first и видим, что граф состоит из одного таска
+//    // вызываем gradle fourth и видим, что граф состоит из четырех тасок
+//gradle.taskGraph.whenReady {TaskExecutionGraph graph ->
+//    println "------- Graph:"
+//    graph.allTasks.each {
+//        println "${it.name}"
+//    }
+//}
+
+    // хотим чтобы 4 зависел от 1,2,3 одновременно. Но в каком порядке вызовется 1,2,3?
+    // порядок не гарантирован. Обячно они следует в порядке, как мы их напишем, но если я хочу изменить порядок, то:
+fourth.dependsOn first
+fourth.dependsOn second
+fourth.dependsOn third
+
+    // хочу порядок: 2,1,3 - 4
+first.mustRunAfter second
+//first.shouldRunAfter second
+
+
+gradle.taskGraph.whenReady {TaskExecutionGraph graph ->
+    println "------- Graph:"
+    graph.allTasks.each {
+        println "${it.name}"
+    }
 }
