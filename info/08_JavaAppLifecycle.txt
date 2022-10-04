@@ -1,0 +1,48 @@
+При вызове gradle.build мы видим следующий граф:
+    compileJava
+    processResources
+    classes
+    jar
+    assemble
+    processTestResources
+    testClasses
+    test
+    check
+    build
+
+    1. Classes - ничего не делает, Она вместилище других наших задач от которых зависит. Она зависит от
+        - compileJava - компилирует java классы
+        - processResources - компилирует ресурсы из main/java/resources
+        - classes
+
+    2. Assemble - аналог classes - ничего не делает а вмещает в себя:
+        - compileJava
+        - processResources
+        - classes
+        - jar - собирает jar
+        - assemble
+
+    3. TestClasses - аналог classes - ничего не делает а вмещает в себя:
+         - compileJava
+         - processResources
+         - classes
+         - compileTestJava - компилирует test-java классы
+         - processTestResources - компилирует ресурсы из test/java/resources
+         - testClasses
+
+    4. Build - вместилище
+        - compileJava
+        - processResources
+        - classes
+        - jar
+        - assemble
+        - compileTestJava
+        - processTestResources
+        - testClasses
+        - test - запускает тесты
+        - check - проверяет выполнение тестов с предыдущего шага и обычно тут происходит генерация репортов и т.д.
+        - build
+
+    5. Clean - удаляет директорию build
+    6. BuildDependents - билдит те проекты, которые зависят от нашего текущего
+    7. BuildNeeded - билдит все проекты от которых зависит наш текущий проект

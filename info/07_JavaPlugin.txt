@@ -6,3 +6,17 @@
     Теперь вызвав gradle.tasks мы можем увидеть какие таски у нас появились
 
     Недостаток: Он берет ID и мы не можем импортровать скрипты и классы без ID
+
+При вызове gradle.build мы видим следующий граф:
+    compileJava
+    processResources
+    classes
+    jar
+    assemble
+    processTestResources
+    testClasses
+    test
+    check
+    build
+
+Все это можно почитать на Gradle.org - The Java Plugin
