@@ -1,0 +1,28 @@
+В Gradle есть три основных варианта, как мы можем работам с пропертями:
+
+    1. Блок extension (ext)
+        ext {
+            javaVersion = 16
+            currentDate = LocalDate.now()
+        }
+       Ключ - Строка, Значение - Object
+       Теперь я могу обращаться к этим пропертям разными способами:
+
+        println ext.javaVersion
+        println project.ext.javaVersion
+        println javaVersion
+        println project.javaVersion
+
+    2. Gradle-properties-file - лучше в рутовой директории проекта:
+            gradle.properties
+       Теперь в этом фале мы можем устанавливать значения в этом файле, но не любые. Это какие-то значения для
+       Gradle-пропертей, которые использует gradle для своей сборки, либо каких-то системных пропертей, jvm аргументов
+       и т.д. Заходим в официальную доку gradle и в build environment мы можем найти инфу по тому как и где указывают
+       проперти
+
+    3. CommandLine
+       Запустим и установим проперти системные и проджект
+        gradle first -D sys.example=sysValue1 -P projectParam1=projectValue
+
+            println project.properties
+            println System.getProperty("sys.example")
