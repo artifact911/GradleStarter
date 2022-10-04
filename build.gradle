@@ -31,7 +31,7 @@ task third {
         println "Task 3"
     }
 }
-task fourth {
+task fourth (group: "dmdev"){
     doLast {
         println "Task 4"
     }
@@ -70,10 +70,25 @@ fourth.dependsOn third
 first.mustRunAfter second
 //first.shouldRunAfter second
 
-
+// whenReady - когда готов, тогда только делай
 gradle.taskGraph.whenReady {TaskExecutionGraph graph ->
     println "------- Graph:"
     graph.allTasks.each {
         println "${it.name}"
     }
 }
+
+gradle.taskGraph.beforeTask {Task task ->
+    if (task.group == 'dmdev') {
+        println "beforeTask callBack $task"
+    }
+}
+
+gradle.taskGraph.afterTask {Task task ->
+    if (task.name == 'first') {
+        println "afterTask callBack $task"
+    }
+}
+
+    // Если запустить просто gradle то выполнится задача по-умолчанию, которую мы тож пожем определить
+defaultTasks "second"

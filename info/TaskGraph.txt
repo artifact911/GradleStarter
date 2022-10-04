@@ -1,0 +1,61 @@
+сделаем зависимость таски4 от таски2
+    fourth.dependsOn(second)
+
+// вызываем gradle fourth и видим что отработали таска2 и таска4
+// читаем так: до того, как выполнится таска4 должна выполниться таска2, а раньше чем 2 таска1
+    fourth.dependsOn second
+    second.dependsOn first
+
+// тут читаем так:
+// после таски2 должна выполнится таска3
+    second.finalizedBy third
+
+// Граф строится на остновании таски, которую мы вызвали.
+// граф можно посмотреть:
+// вызываем gradle first и видим, что граф состоит из одного таска
+// вызываем gradle fourth и видим, что граф состоит из четырех тасок
+    gradle.taskGraph.whenReady {TaskExecutionGraph graph ->
+        println "------- Graph:"
+            graph.allTasks.each {
+                println "${it.name}"
+        }
+}
+
+// хотим чтобы 4 зависел от 1,2,3 одновременно. Но в каком порядке вызовется 1,2,3?
+// порядок не гарантирован. Обячно они следует в порядке, как мы их напишем, но если я хочу изменить порядок, то:
+    fourth.dependsOn first
+    fourth.dependsOn second
+    fourth.dependsOn third
+
+// хочу порядок: 2,1,3 - 4
+    first.mustRunAfter second
+    first.shouldRunAfter second
+
+// whenReady - когда готов, тогда только делай
+    gradle.taskGraph.whenReady {TaskExecutionGraph graph ->
+        println "------- Graph:"
+            graph.allTasks.each {
+                println "${it.name}"
+    }
+}
+
+Мы можем внедрится перед таской и после таски и что-то там подкрутить.
+    - gradle.taskGraph.beforeTask
+    - gradle.taskGraph.afterTask
+    Это сработает для всех тасок.
+Если мы хотим для какой-то таски или группы тасок тогда прикручиваем к таске группу либо по имени:
+    task fourth (group: "dmdev"){
+        doLast {
+            println "Task 4"
+        }
+    }
+
+И теперь на эту группу можно поставить условие:
+     if (task.group == 'dmdev')
+
+На имя условие:
+    if (task.name == 'first')
+
+Если запустить просто gradle то выполнится задача по-умолчанию, которую мы тож пожем определить
+    defaultTasks "second"
+
