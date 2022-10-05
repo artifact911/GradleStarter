@@ -5,13 +5,15 @@ plugins {
 apply from: 'script.gradle'
 
 repositories {
-    // ~/.m2/repository
-    mavenLocal()
-    maven {
-        name "nexus dmdev"
-        uri "https://nexus.dmdev/repository"
-    }
     mavenCentral()
+}
+
+dependencies {
+//    add('implementation', [group: "org.springframework", name: 'spring-webmvc', version: '5.3.12'])
+    // refactor
+//    add('implementation', 'org.springframework:spring-webmvc:5.3.23')
+    // refactor
+    implementation "org.springframework:spring-webmvc:5.3.23"
 }
 
 class CustomPlugin implements Plugin<Project> {
@@ -42,22 +44,3 @@ class CustomPlugin implements Plugin<Project> {
         }
     }
 }
-
-//// это перепилим под класс
-//task hello(description: "Hello task", group: "dmdev", type: DefaultTask) {
-//    println "Configuration task 'hello'"
-//
-//    doLast {
-//        println "execution phase, Action1"
-//    }
-//
-//    doFirst {
-//        println "execution phase, Action2"
-//    }
-//    doLast {
-//        println "execution phase, Action3"
-//    }
-//    println "task: $description, group: $group, actions: ${actions.size()}"
-//    // где наша таска лежит, в каком проекте
-//    println "path task: $path"
-//}

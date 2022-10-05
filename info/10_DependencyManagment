@@ -1,0 +1,12 @@
+Зависимости передаются в виде класса Dependency и оп принимает на вход:
+    group - org.springframework
+    name - spring-webmvc
+    version - 5.3.9 (major, minor, increment, qualifier (SNAPSHOT))
+
+    dependencies {
+       //    add('implementation', [group: "org.springframework", name: 'spring-webmvc', version: '5.3.12'])
+           // refactor
+       //    add('implementation', 'org.springframework:spring-webmvc:5.3.23')
+           // refactor
+           implementation "org.springframework:spring-webmvc:5.3.23"
+    }
