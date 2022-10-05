@@ -10,3 +10,10 @@
            // refactor
            implementation "org.springframework:spring-webmvc:5.3.23"
     }
+
+В Gradle caches gradle хранит наши зависимости, которые он скачал из MavenCentral. Переходя по каретам мы можем
+    зайти в любой пакет где будет:
+        - конфигурация зависимости в виде json
+        - jar с source
+        - конфигурация *.pom и подтянутся транзитивные зависимости
+        - сама jar для использования
