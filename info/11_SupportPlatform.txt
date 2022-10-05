@@ -1,0 +1,14 @@
+Мы можем подключить какую-то версию засисимостей, которая не совместима с другими, Тогда:
+    dependencies {
+
+    // тут зависимость, которую и=мы хотим юзать, но она не совместима с другими
+    compileOnly platform ("org.springframework:spring-boot-dependencies:2.5.3")
+
+   // тогда тут убираем версии и подставится та, которая совместима
+        implementation "org.springframework:spring-webmvc"
+        implementation "org.springframework:spring-aop"
+    }
+
+
+BOM (Bill of Materials) - не является jar и не привносит никаких классов, а является конфигурацией библиотек
+    и говорит нам совместимые либы
