@@ -1,0 +1,48 @@
+У нас есть два способа собрать jar.
+
+ 1. FatJar:
+
+    1. Мы можем запустить таску assemble или jar. Запустим.
+    2. Перейдем в cmd в папку с артефактом
+    3. Запустим нашу jar
+            java -jar .\gradle-starter.jar
+        Получаем
+            no main manifest attribute, in .\gradle-starter.jar
+
+    Если мы разархивируем jar то там будет в папке META-INF файлик MANIFEST.MF. Что бы наш jar можно было запустить,
+    в этом файле нужно указать Main-Class: com.art.HelloWorld. Но нам нужно это сделать так, чтобы при выполнении
+    таски jar эта строчка оказалась внутри нашего файла MANIFEST.MF. И для этого нам нужно подправить нашу задачу jar.
+    Идем в build.gradle и
+        jar {
+            manifest {
+                attributes 'Main-Class': 'com.art.HelloWorld'
+            }
+        }
+
+    4. Пересоберем jar и там будеи наш норм манифест. Но теперь запустив, мы получим ошибку о том, что он не знает
+        о других зависимостях (спринг в данном случае). Нам нужно эти все зависимости подложить в нашу jar.
+        Снова редачим jar таску которая позволяет при момощи from() добавлять файлы зависимостей. А файлы зависимостей
+        мы можем попросить у конфигурации:
+            jar {
+                manifest {
+                    attributes 'Main-Class': 'com.art.HelloWorld'
+                }
+                from (configurations.runtimeClasspath.files)
+            }
+        Но это ничего не даст, тк это jar-ки так и будет лежать в архивах и ошибка будет та же. Фиксим при помощи:
+            jar {
+                manifest {
+                    attributes 'Main-Class': 'com.art.HelloWorld'
+                }
+
+                // пришлось заюзать, ибо при копировании ругался на одинаковые названия каких-то txt
+                duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+                // collect отдал коллекцию jar а zipTree() распаковал их
+                from (configurations.runtimeClasspath.files.collect{project.zipTree(it)})
+            }
+        Запускаем - все работает!!!
+
+
+
+

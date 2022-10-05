@@ -9,23 +9,18 @@ repositories {
 }
 
 dependencies {
-//    add('implementation', [group: "org.springframework", name: 'spring-webmvc', version: '5.3.12'])
-    // refactor
-//    add('implementation', 'org.springframework:spring-webmvc:5.3.23')
-    // refactor
-    implementation ("org.springframework:spring-webmvc:5.3.23") {
-        transitive(false)
-//        exclude(group: "org.springframework", module: 'spring-aop' )
-    }
+
+    implementation ("org.springframework:spring-webmvc:5.3.23")
 }
 
-configurations {
-    Configuration configurationImpl = getByName("implementation")
-    dmdev {
-        description = "dmdev configuration"
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.art.HelloWorld'
     }
-    configurationImpl.extendsFrom(dmdev)
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    from (configurations.runtimeClasspath.files.collect{project.zipTree(it)})
 }
+
 
 class CustomPlugin implements Plugin<Project> {
 
