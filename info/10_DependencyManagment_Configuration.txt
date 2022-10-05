@@ -1,0 +1,44 @@
+Зависимости передаются в виде класса Dependency и оп принимает на вход:
+    group - org.springframework
+    name - spring-webmvc
+    version - 5.3.9 (major, minor, increment, qualifier (SNAPSHOT))
+
+    dependencies {
+       //    add('implementation', [group: "org.springframework", name: 'spring-webmvc', version: '5.3.12'])
+
+           // refactor
+       //    add('implementation', 'org.springframework:spring-webmvc:5.3.23')
+
+           // refactor
+           implementation "org.springframework:spring-webmvc:5.3.23"
+    }
+
+    - implementation - подключает наши зависимсоти для использования у нас в исходном коде
+    - compileOnly - используется только во время компиляции, Во время выполнения - не нужна
+    - compileClasspath extends compileOnly, implementation - используется compileJava таска
+    - annotationProcessor - для использования наших любых аннотаций (Ломбок)
+    - runtimeOnly - используется только в рантайме (Драйверы БД)
+    - runtimeClasspath extends runtimeOnly, implementation - группа для выполнения нашего приложения
+    - testImplementation extends implementation - для работы тестов
+    - testCompileOnly - аналог compileOnly но юзанется только в тестах
+    - testCompileClasspath extends testCompileOnly, testImplementation -  используется compileTestJava таска
+    - testRuntimeOnly extends runtimeOnly - используется таской Test которая запускает тесты
+    - testRuntimeClasspath extends testRuntimeOnly, testImplementation - группа для выполнения нашего тестов
+    - default extends runtimeElements - используется для подключения других проектов (явно не задается никак и не указывается)
+
+В Gradle caches gradle хранит наши зависимости, которые он скачал из MavenCentral. Переходя по каретам мы можем
+    зайти в любой пакет где будет:
+        - конфигурация зависимости в виде json
+        - jar с source
+        - конфигурация *.pom и подтянутся транзитивные зависимости
+        - сама jar для использования
+
+Конфирурация:
+    configurations {
+        Configuration configurationImpl = getByName("implementation")
+        dmdev {
+            description = "dmdev configuration"
+        }
+        configurationImpl.extendsFrom(dmdev)
+    }
+    Используеться редко, т.к. хватает и мощностей плагинов

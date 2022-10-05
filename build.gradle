@@ -16,6 +16,14 @@ dependencies {
     implementation "org.springframework:spring-webmvc:5.3.23"
 }
 
+configurations {
+    Configuration configurationImpl = getByName("implementation")
+    dmdev {
+        description = "dmdev configuration"
+    }
+    configurationImpl.extendsFrom(dmdev)
+}
+
 class CustomPlugin implements Plugin<Project> {
 
     @Override
