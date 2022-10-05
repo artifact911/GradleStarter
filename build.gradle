@@ -13,7 +13,10 @@ dependencies {
     // refactor
 //    add('implementation', 'org.springframework:spring-webmvc:5.3.23')
     // refactor
-    implementation "org.springframework:spring-webmvc:5.3.23"
+    implementation ("org.springframework:spring-webmvc:5.3.23") {
+        transitive(false)
+//        exclude(group: "org.springframework", module: 'spring-aop' )
+    }
 }
 
 configurations {

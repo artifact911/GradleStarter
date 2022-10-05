@@ -13,6 +13,40 @@
            implementation "org.springframework:spring-webmvc:5.3.23"
     }
 
+Если мы не хотим использовать какую-то транзитивную зависимость, то:
+     dependencies {
+        implementation ("org.springframework:spring-webmvc:5.3.23") {
+            exclude(group: "org.springframework", module: 'spring-aop' )
+            }
+     }
+
+     Если хотим пропнуть все транзитивные:
+         dependencies {
+            implementation "org.springframework:spring-webmvc:5.3.23" {
+                transitive(false)
+                }
+            }
+
+     Что если транзитивные зависимости притащили конфликт версий:
+        По-умолчанию gradle возьмет более высокой версии. Но если мы хотим иначе, то:
+            1 вариант:
+             dependencies {
+                implementation "org.springframework:spring-webmvc:5.3.23"
+
+                // хотим эту поменять
+                implementation "org.springframework:spring-aop:5.3.1" {
+                    force(true)
+                }
+
+            2 вариант через блок configurations:
+                 configurations {
+                    all {
+                        resolutionStrategy {
+                            force "org.springframework:spring-aop:5.3.1"
+                        }
+                    }
+                 }
+
     - implementation - подключает наши зависимсоти для использования у нас в исходном коде
     - compileOnly - используется только во время компиляции, Во время выполнения - не нужна
     - compileClasspath extends compileOnly, implementation - используется compileJava таска
