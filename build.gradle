@@ -14,12 +14,21 @@ dependencies {
 }
 
 jar {
+    def jars = configurations.runtimeClasspath.files.collect { "lib/$it.name" }
     manifest {
         attributes 'Main-Class': 'com.art.HelloWorld'
+        attributes 'Class-Path': jars.join(' ')
     }
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-    from (configurations.runtimeClasspath.files.collect{project.zipTree(it)})
+//    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+//    from (configurations.runtimeClasspath.files.collect{project.zipTree(it)})
 }
+
+task copyAllDependencies(type: Copy) {
+    from(configurations.runtimeClasspath.files)
+    into("$buildDir/libs/lib")
+}
+
+jar.dependsOn copyAllDependencies
 
 
 class CustomPlugin implements Plugin<Project> {
