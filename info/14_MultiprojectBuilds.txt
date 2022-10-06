@@ -10,3 +10,21 @@
     include - добавляет модули
 
     include 'common:core' - такая запись указывает на модуль внутри модуля
+
+Зависимость одного модуля на другой указывается через блок зависимостей
+    dependencies {
+        implementation project(":common:core")
+        implementation project(":database")
+    }
+
+    Но таким образом мы не можем тащить транзитивные зависимости одного нашего проекта на другой.
+    !!! Не следует использовать устаревшие configurations для решения этой проблемы (compile, testCompile)
+    Способ решения такой:
+        В модуле, где есть сторонняя зависимость, которую мы хотим передавать транзитивно мы вместо implementation
+        пишем api, но для такого мува, нам нужно поменять прагин java на плагин java-library
+            plugins {
+                id 'java-library'
+            }
+            dependencies {
+                api project(":common:core")
+            }

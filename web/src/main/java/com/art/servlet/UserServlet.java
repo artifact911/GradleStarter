@@ -1,6 +1,7 @@
 package com.art.servlet;
 
 import com.art.service.UserService;
+import com.art.util.StringUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,9 +20,9 @@ public class UserServlet extends HttpServlet {
         resp.setContentType("text/html");
 
         var writer = resp.getWriter();
-//        userService.getAll().forEach( user -> writer.write("""
-//                <h1>%d: %s</h1>""".formatted(user.id(), user.name())));
-
-        userService.getAll().forEach( user -> writer.write(String.format("<h1>%d: %s</h1>", user.getId(), user.getName())));
+        userService.getAll().forEach( user -> writer
+                .write(String.format("<h1>%d: %s</h1>",
+                        user.getId(),
+                        StringUtils.trim(user.getName()))));
     }
 }

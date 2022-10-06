@@ -11,6 +11,9 @@ repositories {
 }
 
 dependencies {
+    implementation project(":service")
+    implementation project(":common:util")
+    compileOnly "jakarta.servlet:jakarta.servlet-api:5.0.0"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
 }
@@ -18,3 +21,15 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+war {
+    archiveName "dmdev.war"
+}
+
+task deployTomcat(type: Copy) {
+    from(war.archiveFile.get())
+    into("/Users/anduser/Documents/_Projects/fromLessons/gradle-starter/web/src/apache-tomcat-10.0.23/webapps")
+}
+
+deployTomcat.dependsOn war
+assemble.dependsOn deployTomcat

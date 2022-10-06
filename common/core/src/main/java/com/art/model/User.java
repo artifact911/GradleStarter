@@ -2,8 +2,8 @@ package com.art.model;
 
 public class User {
 
-    private Integer id;
-    private String name;
+    private final Integer id;
+    private final String name;
 
     public User(Integer id, String name) {
         this.id = id;
