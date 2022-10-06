@@ -1,0 +1,44 @@
+Не нужно задавать общее поведение/настройки/зависимости в корневом/корневых build.gradle за исключением минорных
+    настроек: задание имени группы; указание репозитория, как mavenCentral(), т.к. мы хоти оставить гибкость
+    модулей м проекта в целом. Но сделать мы это можем.
+
+    1. Что бы настроить общее поведение для всех проектов и рутового в том числе есть специальный dsl allprojects{}
+        allprojects{
+            group "art"
+
+            repositories {
+                mavenCentral()
+            }
+        }
+
+    2. subprojects{} - настроит общее поведение для всех подпроектов в билде которого мы это укажем
+        subprojects {
+            plugins {}
+            dependencies {}
+        }
+
+    3. Из рутового проекта получитить через project любой проект:
+        project(":database") { repositories{} }
+
+Есть buildscript dsl. Но нужен чтобы конфигурировать наш gradle а не проект
+        buildscript {
+
+        // repositories нужно указывть в buildscript, чтобы gradle знал откуда выкачивать зависимости
+            repositories {
+                mavenCentral()
+            }
+
+            dependencies {
+
+            // все зависимости, которые мы укажем в classpath будут нам доступны во время выполнения нашего скрипта
+            // т.е. в build.gradle файлах
+
+                // теперь добавим импорт вверху скрипта и можем это юзать во всем скрипте
+                // import org.apache.commons.lang3.StringUtils
+
+                classpath "org.apache.commons:commons-lang3:3.12.0"
+            }
+        }
+
+        Важно, buildscript должен быть самым первым в в билде, т.к. он настривает весь билд скрипт.
+        plugins dsl должен быть после buildscript dsl сразу же. Либо самым первым, если нет buildscript dsl.
