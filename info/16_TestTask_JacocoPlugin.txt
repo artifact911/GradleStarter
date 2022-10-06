@@ -1,0 +1,49 @@
+Таска Test находится в группе verification - test
+
+    Когда мы создавали модуль, нам по умолчанию был сконфигурирован build.gradle
+        dependencies {
+            testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+            testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+        }
+
+        test {
+
+        // для пралелльного запуска используется:
+            maxParallelForks 3 (три потока)
+
+            useJUnitPlatform()
+        }
+
+    Зачем конфигурить таску test? Если зайти на оф доку gradle то мы увидим, что нам нужно явно указать, какую
+        либу юзать для тестов. По-умолчанию если ниче не уазывать, скорее всего будет junit4
+        - useJUnitPlatform() - это вызов задачи у task "юзай junit5"
+        - useTestNG()
+
+    Так же тут мы можем include и exclude классы для тестов.
+
+    После запуска тестов у нас генерится отчет:
+        build/reports/tests/test/index.html
+    Но в таком отчете у нас не показывается процент покрытия тестами нашего проекта.
+
+Jacoco plugin - позволяет нам генерить более продвинутый отчет. подключается в plugins dsl
+        plugins {
+            id 'jacoco'
+        }
+    Теперь в группе verification у нас добавилось две таски:
+        - jacocoTestReport - гененрирует наш отчет по покрытию тестами
+        - jacocoTestCoverageVerification - может анализировать покрытие тестами и, например,
+            зафелить наш билд
+
+    jacocoTestReport По умолчанию он не привязан к задаче Test, поэтому привяжем:
+        test.finalizedBy jacocoTestReport
+        jacocoTestReport.dependsOn(test)
+
+    Тепрь если запустим test то у нас будет отчет от jacoco
+
+На Gradle есть дока, по JacocoPlugin.
+    Например написано, как генить отчет в xml который умеет читать sonarqube и генерить свой отчет;
+    jacocoTestCoverageVerification:
+        Можно настраивать правило по прценту покрытия тестами кода;
+        Включать и исключать классы, которые он будет расчитывать в своих правилах;
+
+Часто используется checkStyle plugin - почитать о использовании в доке gradle
