@@ -1,0 +1,30 @@
+Для создания war нам нужно прикрутить соотвествующий плагин, который добавит нам таску war
+    plugins {
+        id 'war'
+    }
+
+    Теперь у нас изменился жизненный цикл сборки и мы пропускам этап сбора jar архива. Запустив assemble мы увидим:
+        > Task :compileJava UP-TO-DATE
+        > Task :processResources UP-TO-DATE
+        > Task :classes UP-TO-DATE
+        > Task :war
+        > Task :assemble
+
+    Сменим имя war:
+        war {
+            archiveName "dmdev.war"
+        }
+
+    Установим КУДА писать war (to Tomcat)
+        task deployTomcat(type: Copy) {
+            from(war.archiveFile.get())
+            into("/Users/anduser/Documents/_Projects/fromLessons/gradle-starter/src/apache-tomcat-10.0.23/webapps")
+        }
+
+    Выстроим зависимости
+        deployTomcat.dependsOn war
+        assemble.dependsOn deployTomcat
+
+    Перенесем томкэт в проект, сейчас он в доках и не хватает прав доступа из консоли
+    Запустим его - в папке bin ./startup.sh
+    Откроем localhost:8080/dmdev/users
