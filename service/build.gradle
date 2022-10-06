@@ -1,7 +1,14 @@
+//import com.art.plugin.CustomPlugin
+
 plugins {
     id 'java-library'
     id 'jacoco'
+    id 'custom-art'
 }
+
+//apply plugin: CustomPlugin
+    // хотим дропнуть ипорт, тогда:
+//apply plugin: com.art.plugin.CustomPlugin
 
 group 'org.example'
 
